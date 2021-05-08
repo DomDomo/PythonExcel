@@ -1,0 +1,19 @@
+{
+  "name": "bscscan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "start": "node balanceCheck.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bscscan-api": "^1.0.1",
+    "jquery": "^3.6.0"
+  },
+  "dependencies": {
+    "web3": "^1.3.5"
+  }
+}
