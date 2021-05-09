@@ -1,7 +1,5 @@
-import os
 import requests
 from bs4 import BeautifulSoup
-import time
 import json
 from datetime import datetime, timedelta
 
@@ -36,8 +34,26 @@ for tr in soup.find("tbody").find_all("tr"):
     }
     cryptos.append(crypto)
 
+print("Adding outdated cryptos to CMC list...")
+prev_cryptos = []
+
+with open('CMC.txt', 'r') as f:
+    prev_cryptos = json.loads(f.read())
+
+old_cryptos = []
+
+while(cryptos[-1]["name"] != prev_cryptos[-1]["name"]):
+    prev_cryptos[-1]["time"] = "outdated"
+    old_cryptos.append(prev_cryptos[-1])
+    prev_cryptos.pop(-1)
+
+cryptos = cryptos + old_cryptos
+
+print("Writing data to text file")
 with open('CMC.txt', 'w') as f:
     f.write(json.dumps(cryptos))
 
 print("Done.")
+
+# Last one was WSTA Wrapped Statera
 

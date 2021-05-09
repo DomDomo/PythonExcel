@@ -1,7 +1,5 @@
-import os
 import requests
 from bs4 import BeautifulSoup
-import time
 import json
 from datetime import datetime, timedelta
 
@@ -39,6 +37,7 @@ for page in range(pages):
         }
         cryptos.append(crypto)
 
+print("Writing data to text file")
 with open('CG.txt', 'w') as f:
     f.write(json.dumps(cryptos))
 
