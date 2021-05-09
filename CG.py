@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from datetime import datetime, timedelta
+from settings import settings
 
 print("Getting CoinGecko data...")
 
@@ -13,10 +14,13 @@ def find_date(time):
     elif "hours" in time:
         hours = int(time.replace("hours", "").strip())
         delta = timedelta(hours=hours)
+    elif "month" in time:
+        days = int(time.replace("month", "").strip())
+        delta = timedelta(days=days*30)
     return (datetime.date(datetime.now() - delta)).strftime("%Y-%m-%d")
 
 cryptos = []
-pages = 3
+pages = settings["CG_PAGES"]
 URL = "https://www.coingecko.com/en/coins/recently_added?page="
 
 for page in range(pages):

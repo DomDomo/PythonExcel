@@ -1,13 +1,14 @@
 
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill
-import time
+from dotenv import load_dotenv
 import json
 from datetime import datetime
+from settings import settings
 
 print("Inputting data to excel file...")
 
-PRINT_ALL = False
+PRINT_ONLY_BOTH = settings["ONLY_BOTH_LISTINGS"]
 
 def days_between(d1, d2):
     d1 = datetime.strptime(d1, "%Y-%m-%d")
@@ -48,18 +49,7 @@ sheet.column_dimensions['E'].width = 12
 sheet.column_dimensions['F'].width = 10
 
 row_num = 0
-if(PRINT_ALL):
-    for i in range(len(CG)):
-        name = CG[i]["name"]
-        sheet.cell(row=i+2, column=1).value = name
-        sheet.cell(row=i+2, column=2).value = CG[i]["time"]
-        sheet.cell(row=i+2, column=3).value = CG[i]["date"]
-        for c in CMC:
-            if(c["name"] == name):
-                sheet.cell(row=i+2, column=4).value = c["time"]
-                sheet.cell(row=i+2, column=5).value = c["date"]
-                sheet.cell(row=i+2, column=6).value = days_between(c["date"], CG[i]["date"])
-else:
+if(PRINT_ONLY_BOTH):
     for i in range(len(CG)):
         name = CG[i]["name"]  
         for c in CMC:
@@ -71,6 +61,17 @@ else:
                 sheet.cell(row=row_num+2, column=5).value = c["date"]
                 sheet.cell(row=row_num+2, column=6).value = days_between(c["date"], CG[i]["date"])
                 row_num += 1
+else:
+    for i in range(len(CG)):
+        name = CG[i]["name"]
+        sheet.cell(row=i+2, column=1).value = name
+        sheet.cell(row=i+2, column=2).value = CG[i]["time"]
+        sheet.cell(row=i+2, column=3).value = CG[i]["date"]
+        for c in CMC:
+            if(c["name"] == name):
+                sheet.cell(row=i+2, column=4).value = c["time"]
+                sheet.cell(row=i+2, column=5).value = c["date"]
+                sheet.cell(row=i+2, column=6).value = days_between(c["date"], CG[i]["date"])
 
 book.save("result.xlsx")
 

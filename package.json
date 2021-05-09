@@ -4,7 +4,7 @@
   "description": "",
   "main": "test.js",
   "scripts": {
-    "crypto": "python CG.py && python CMC.py && python excel.py && start excel sample.xlsx",
+    "crypto": "python CG.py && python CMC.py && python excel.py && start excel result.xlsx",
     "start": "npm run-script crypto",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
