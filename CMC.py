@@ -3,8 +3,18 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import json
+from datetime import datetime, timedelta
 
 print("Getting CoinMarketCap data...")
+
+def find_date(time):
+    delta = ""
+    if "Today" in time:
+        delta = timedelta(days=0)
+    elif "day" in time:
+        days = int(time.split(" ")[0])
+        delta = timedelta(days=days)
+    return (datetime.date(datetime.now() - delta)).strftime("%Y-%m-%d")
 
 URL = "https://coinmarketcap.com/new/"
 
@@ -17,10 +27,12 @@ soup = BeautifulSoup(sess.get(URL).text, 'html.parser')
 for tr in soup.find("tbody").find_all("tr"):
     name = tr.find("p", attrs={"color": "text"}).text
     time = tr.find_all("td")[-2].text.replace('ago', '')
+    date = find_date(time)
 
     crypto = {
         "name": name,
-        "time": time
+        "time": time,
+        "date": date
     }
     cryptos.append(crypto)
 
