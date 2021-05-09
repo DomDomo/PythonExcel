@@ -41,11 +41,11 @@ sheet['E1'].fill = PatternFill(start_color="AAC7FF", fill_type = "solid")
 sheet['F1'].fill = PatternFill(start_color="FFCCBB", fill_type = "solid")
 
 sheet.column_dimensions['A'].width = 25
-sheet.column_dimensions['B'].width = 10
+sheet.column_dimensions['B'].width = 12
 sheet.column_dimensions['C'].width = 12
-sheet.column_dimensions['D'].width = 10
+sheet.column_dimensions['D'].width = 12
 sheet.column_dimensions['E'].width = 12
-sheet.column_dimensions['F'].width = 12
+sheet.column_dimensions['F'].width = 10
 
 row_num = 0
 if(PRINT_ALL):
@@ -72,7 +72,7 @@ else:
                 sheet.cell(row=row_num+2, column=6).value = days_between(c["date"], CG[i]["date"])
                 row_num += 1
 
-book.save("sample.xlsx")
+book.save("result.xlsx")
 
 print("Done.")
 
