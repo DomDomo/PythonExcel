@@ -4,7 +4,8 @@
   "description": "",
   "main": "test.js",
   "scripts": {
-    "start": "node balanceCheck.js",
+    "crypto": "python CG.py && python CMC.py && python excel.py && start excel sample.xlsx",
+    "start": "npm run-script crypto",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
