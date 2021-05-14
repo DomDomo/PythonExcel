@@ -8,12 +8,16 @@ print("Getting CoinGecko data...")
 
 def find_date(time):
     delta = ""
-    if "days" in time:
-        days = int(time.replace("days", "").strip())
-        delta = timedelta(days=days)
-    elif "hours" in time:
-        hours = int(time.replace("hours", "").strip())
+    time = time.replace("s", "")
+    if "minute" in time:
+        minutes = int(time.split(" ")[0])
+        delta = timedelta(minutes=minutes)
+    elif "hour" in time:
+        hours = int(time.replace("hour", "").strip())
         delta = timedelta(hours=hours)
+    elif "day" in time:
+        days = int(time.replace("day", "").strip())
+        delta = timedelta(days=days)
     elif "month" in time:
         days = int(time.replace("month", "").strip())
         delta = timedelta(days=days*30)
