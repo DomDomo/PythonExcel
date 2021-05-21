@@ -1,7 +1,6 @@
 
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill
-from dotenv import load_dotenv
 import json
 from datetime import datetime
 from settings import settings

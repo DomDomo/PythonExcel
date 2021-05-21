@@ -7,6 +7,7 @@
     "crypto": "python CG.py && python CMC.py && python excel.py && start excel result.xlsx",
     "start": "npm run-script crypto",
     "excel": "start excel result.xlsx",
+    "whales": "python ./WhaleWatching/top_whales.py && start excel holders.xlsx",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

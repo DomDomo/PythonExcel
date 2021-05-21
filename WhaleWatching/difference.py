@@ -1,29 +1,18 @@
-import requests
-from bs4 import BeautifulSoup
 import json
 
 def compare_with_previous_top():
 
     print("Comparing with the previous top 50...")
 
-    BASE_URL = "https://bscscan.com/"
-    URL = BASE_URL + "token/0xf09b7b6ba6dab7cccc3ae477a174b164c39f4c66?a="
-
-    resp = requests.get(URL)
-    sess = requests.Session()
-    soup = BeautifulSoup(sess.get(URL).text, 'html.parser')
-
     old_holders = []
     new_holders = []
 
-    with open('holders_first.txt', 'r') as f:
+    with open('old_holders.txt', 'r') as f:
         old_holders = json.loads(f.read())
     with open('holders.txt', 'r') as f:
         new_holders = json.loads(f.read())
 
-
-    def normal_number(num):
-        return int(num.replace(",", ""))
+    
 
     num = 1
     for new_holder in new_holders:
@@ -35,6 +24,8 @@ def compare_with_previous_top():
                 break
 
     with open('holders.txt', 'w') as f:
+        f.write(json.dumps(new_holders))
+    with open('old_holders.txt', 'w') as f:
         f.write(json.dumps(new_holders))
 
 
