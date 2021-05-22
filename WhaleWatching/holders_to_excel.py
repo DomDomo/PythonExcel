@@ -30,7 +30,7 @@ def find_difference(holder):
 
 
 def list_holders(sheet, row, column, holders):
-    rank = 0
+    rank = 1
     coin_sum = 0
     difference_sum = 0
     percent_sum = 0
@@ -137,7 +137,7 @@ def save_to_excel():
     for i in range(2, column+1):
             sheet.cell(row=total_row, column=i).border = border_style
 
-    sheet.cell(row=total_row, column=2).value = "Total's"
+    sheet.cell(row=total_row, column=2).value = "Total's for top 50 (actually 48)"
     sheet.cell(row=total_row, column=2).alignment = Alignment(horizontal='right')
 
     formatted_sum = '{:,}'.format(coin_sum)
@@ -168,11 +168,35 @@ def save_to_excel():
     for i in range(1, column+1):
         sheet.cell(row=row, column=i).fill = PatternFill(start_color="ABABAB", fill_type = "solid")
 
-    list_holders(sheet, row+1, column, old_whales)
+
+    left_coin_sum, left_diffrence_sum, left_percent_sum = list_holders(sheet, row+1, column, old_whales)
+
+    coin_sum += left_coin_sum
+    difference_sum += left_diffrence_sum
+    percent_sum += left_percent_sum
+
+    total_row = row+5
+    for i in range(4, column+1):
+            sheet.cell(row=total_row, column=i).border = border_style
+            sheet.cell(row=total_row, column=i).fill = grey_background
+            sheet.cell(row=total_row, column=i).font = Font(bold=True)
+
+    sheet.cell(row=total_row, column=5).value = "Total loss / gain from all whales"
+    sheet.cell(row=total_row, column=5).alignment = Alignment(horizontal='right')
+
+    formatted_difference_sum = '{:,}'.format(difference_sum)
+
+    sheet.cell(row=total_row, column=6).value = readable_number(formatted_difference_sum)
+
+    sheet.cell(row=total_row, column=7).value = formatted_difference_sum
+
+
 
     book.save("holders.xlsx")
 
     print("Done.")
+
+save_to_excel()
 
 
 
