@@ -32,7 +32,7 @@ def compare_with_previous_top():
         with open('old_holders.txt', 'w') as f:
             f.write(json.dumps(new_holders))
 
-    print(settings)
+    print("Looking for old whales...")
 
     new_addresses = [holder["address"] for holder in new_holders]
     old_adresses = [holder["address"] for holder in old_holders]
@@ -46,12 +46,12 @@ def compare_with_previous_top():
                 holder["old_quantity"] = holder["quantity"]
                 holder["quantity"] = find_old_whale_balance(holder)
                 old_whales.append(holder)
+    
 
-    print(old_whales)
+    with open('old_whales.txt', 'w') as f:
+        f.write(json.dumps(old_whales))
     
     print("Done.")
-
-compare_with_previous_top()
 
 
 

@@ -6,76 +6,40 @@ from openpyxl.worksheet.dimensions import ColumnDimension
 from string import ascii_uppercase
 import json
 
-def save_to_excel():
-
-    print("Making excel file...")
-
-    border_style = Border(left=Side(style='thin'), 
-                        right=Side(style='thin'), 
-                        top=Side(style='thin'), 
-                        bottom=Side(style='thin'))
-    grey_background = PatternFill(start_color="D8D8D9", fill_type = "solid")
-
-    def readable_number(num):
-        rounded_integer = round(int(num.replace(",", "")), -12) 
-        trillion = 1000000000000
-        with_word = str(round(rounded_integer, -12) / trillion).split(".")[0] + " Trillion"
-        return with_word
-
-    def find_difference(holder):
-        d1 = int(holder["quantity"].replace(",", ""))
-        d2 = int(holder["old_quantity"].replace(",", ""))
-        return d1-d2
 
 
-    holders = []
+border_style = Border(left=Side(style='thin'), 
+                    right=Side(style='thin'), 
+                    top=Side(style='thin'), 
+                    bottom=Side(style='thin'))
 
-    with open('holders.txt', 'r') as f:
-        holders = json.loads(f.read())
+grey_background = PatternFill(start_color="D8D8D9", fill_type = "solid")
+
+def readable_number(num):
+    rounded_integer = round(int(num.replace(",", "")), -12) 
+    trillion = 1000000000000
+    with_word = str(round(rounded_integer, -12) / trillion).split(".")[0] + " Trillion"
+    return with_word
+
+def find_difference(holder):
+    d1 = int(holder["quantity"].replace(",", ""))
+    d2 = int(holder["old_quantity"].replace(",", ""))
+    return d1-d2
 
 
-    # Remove dead wallet and pancakeswap amounts
-    remove_top = 2
-    for i in range(remove_top):
-        holders.pop(0)
 
 
-    book = Workbook()
-    sheet = book.active
-    sheet.title = "Holders"
-
-    names = [
-        [5, ""],
-        [50, "Top Wallets"],
-        [25, "Amount (in coins)"],
-        [25, "Readable Amount"],
-        [15, "% of Supply"],
-        [22, "More/Less"],
-        [25, "24HT Transaction Amounts"]
-    ]
-
-    column_num = len(names);
-
-    name_i = 0
-    for c in ascii_uppercase[:column_num]:
-        xy = c + "1"
-        sheet.column_dimensions[c].width = names[name_i][0]
-        sheet[xy] = names[name_i][1]
-        sheet[xy].alignment = Alignment(horizontal='center')
-        sheet[xy].border = border_style
-        name_i += 1
-
+def list_holders(sheet, row, column, holders):
+    rank = 0
     coin_sum = 0
     difference_sum = 0
     percent_sum = 0
-
-    row = 2
     for holder in holders:
-        for i in range(1, column_num+1):
+        for i in range(1, column+1):
             sheet.cell(row=row, column=i).border = border_style
 
         # Rank
-        sheet.cell(row=row, column=1).value = int(holder["rank"])-remove_top
+        sheet.cell(row=row, column=1).value = rank
 
         # Top Wallets
         sheet.cell(row=row, column=2).value = holder["address"]
@@ -115,18 +79,62 @@ def save_to_excel():
                 sheet.cell(row=row, column=7).font = Font(bold=True)
 
             # Color grey
-            for i in range(1, column_num+1):
+            for i in range(1, column+1):
                 sheet.cell(row=row, column=i).fill = grey_background
 
         row += 1
+        rank += 1
+
+    return [coin_sum, difference_sum, percent_sum]
 
 
-    # Old whales
-    # with open('holders.txt', 'r') as f:
-    #     holders = json.loads(f.read())
+def save_to_excel():
 
-    total_row = len(holders)+5
-    for i in range(2, column_num+1):
+    print("Making excel file...")
+
+    holders = []
+
+    with open('holders.txt', 'r') as f:
+        holders = json.loads(f.read())
+
+
+    # Remove dead wallet and pancakeswap amounts
+    remove_top = 2
+    for i in range(remove_top):
+        holders.pop(0)
+
+
+    book = Workbook()
+    sheet = book.active
+    sheet.title = "Holders"
+
+    names = [
+        [5, ""],
+        [50, "Top Wallets"],
+        [25, "Amount (in coins)"],
+        [25, "Readable Amount"],
+        [15, "% of Supply"],
+        [22, "More/Less"],
+        [25, "24HT Transaction Amounts"]
+    ]
+
+    column = len(names);
+
+    name_i = 0
+    for c in ascii_uppercase[:column]:
+        xy = c + "1"
+        sheet.column_dimensions[c].width = names[name_i][0]
+        sheet[xy] = names[name_i][1]
+        sheet[xy].alignment = Alignment(horizontal='center')
+        sheet[xy].border = border_style
+        name_i += 1
+
+    row = 2
+
+    coin_sum, difference_sum, percent_sum = list_holders(sheet, row, column, holders)
+
+    total_row = len(holders)+3
+    for i in range(2, column+1):
             sheet.cell(row=total_row, column=i).border = border_style
 
     sheet.cell(row=total_row, column=2).value = "Total's"
@@ -148,12 +156,23 @@ def save_to_excel():
 
     sheet.cell(row=total_row, column=7).value = formatted_difference_sum
 
+    # Old whales
+    old_whales = []
+    with open('old_whales.txt', 'r') as f:
+        old_whales = json.loads(f.read())
 
+    row = total_row+2
+    sheet.cell(row=row, column=2).value = "Old Whales"
+    sheet.cell(row=row, column=2).alignment = Alignment(horizontal='center')
+
+    for i in range(1, column+1):
+        sheet.cell(row=row, column=i).fill = PatternFill(start_color="ABABAB", fill_type = "solid")
+
+    list_holders(sheet, row+1, column, old_whales)
 
     book.save("holders.xlsx")
 
     print("Done.")
-
 
 
 

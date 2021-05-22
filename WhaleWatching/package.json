@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "whales": "python top_whales.py && start excel holders.xlsx"
+    "whales": "python whales.py && start excel holders.xlsx"
   },
   "author": "",
   "license": "ISC"
