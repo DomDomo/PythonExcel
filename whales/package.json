@@ -1,0 +1,11 @@
+{
+  "name": "whales",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "python whales.py && start excel holders.xlsx"
+  },
+  "author": "",
+  "license": "ISC"
+}
