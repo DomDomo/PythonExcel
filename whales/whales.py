@@ -2,9 +2,11 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from excel import save_to_excel
 import requests
+import os
 import time
 import re
 import json
+import glob
 import settings
 
 
@@ -39,24 +41,30 @@ def find_top_holders():
 def import_old_holders():
     old_holders = []
 
-    with open('old_holders.txt', 'r') as f:
+    dirname = os.path.dirname(__file__)
+    path = os.path.join(dirname, "old_holders")
+
+    all_txts = sorted(glob.glob(path + '\*.txt'))
+    filename = all_txts[0] if settings.USE_OLDEST else all_txts[-1]
+
+    with open(filename, 'r') as f:
         old_holders = json.loads(f.read())
 
     return old_holders
 
-def compare_holders(new_holders, old_holders):
+def save_old_whales(holders):
+    filename = "old_holders/old_holders" + time.strftime("%Y%m%d-%H%M%S") + ".txt"
+    dirname = os.path.dirname(__file__)
+    path = os.path.join(dirname, filename)
+    with open(path, 'w') as f:
+        f.write(json.dumps(holders))
 
-    num = 1
+def compare_holders(new_holders, old_holders):
     for new_holder in new_holders:
         for old_holder in old_holders:
             if new_holder["address"] == old_holder["address"]:
                 new_holder["old_quantity"] = old_holder["quantity"]
-                num += 1
                 break
-    
-    if settings.SAVE_HOLDERS_TO_OLD:
-        with open('old_holders.txt', 'w') as f:
-            f.write(json.dumps(new_holders))
 
     return new_holders
 
@@ -104,6 +112,9 @@ def main():
 
     print("Adding previous amount of tokens...")
     holders = compare_holders(holders, old_holders)
+
+    if settings.SAVE_HOLDERS:
+        save_old_whales(holders)
 
     print("Finding old whales...")
     old_whales = find_old_whales(holders, old_holders)
