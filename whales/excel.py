@@ -158,7 +158,7 @@ def save_to_excel(holders, old_whales):
     difference_sum += left_diffrence_sum
     percent_sum += left_percent_sum
 
-    total_row = row+5
+    total_row = row + len(old_whales) + 2
     for i in range(4, column+1):
             sheet.cell(row=total_row, column=i).border = border_style
             sheet.cell(row=total_row, column=i).fill = grey_background
