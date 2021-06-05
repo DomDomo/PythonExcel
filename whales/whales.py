@@ -45,7 +45,7 @@ def import_old_holders():
     path = os.path.join(dirname, "old_holders")
 
     all_txts = sorted(glob.glob(path + '\*.txt'))
-    filename = all_txts[0] if settings.USE_OLDEST else all_txts[-1]
+    filename = all_txts[0] if settings.USE_OLDEST else all_txts[-2]
 
     with open(filename, 'r') as f:
         old_holders = json.loads(f.read())
@@ -71,7 +71,10 @@ def compare_holders(new_holders, old_holders):
 def find_old_whale_balance(whale):
     URL = whale["link"]
 
-    driver = webdriver.Chrome()
+    options = webdriver.ChromeOptions()
+    options.add_argument("headless")
+
+    driver = webdriver.Chrome(options=options)
     driver.get(URL)
     time.sleep(settings.BSCSCAN_TIME_DELAY)
 
