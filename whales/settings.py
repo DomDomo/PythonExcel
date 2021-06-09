@@ -5,6 +5,6 @@ TOKEN = MOONPIRATE
 URL = "{}token/generic-tokenholders2?m=normal&a={}&s=100000000000000000000000000&sid=2760e1b7d7cd4e69abe3df09a4bea20f&p=1".format(BASE_URL, TOKEN)
 
 BSCSCAN_TIME_DELAY = 0.1
-SAVE_HOLDERS =  False
+SAVE_HOLDERS =  True
 USE_OLDEST = False
 REMOVE_DEAD_AND_PS = True
